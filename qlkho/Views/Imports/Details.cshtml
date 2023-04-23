@@ -1,0 +1,51 @@
+﻿@model qlkho.Models.Import
+
+@{
+    ViewData["Title"] = "Details";
+    var i = 1;
+    var km = ViewBag.importlog as IQueryable<qlkho.Models.ImportLog>;
+}
+
+<h1>Details</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                #
+            </th>
+            <th>
+                Material Name
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th>
+                Unit
+            </th>
+        </tr>
+    </thead>
+    @foreach(var item in km)
+    {
+        @if (item.ImportID == Model.ImportID)
+        {
+            <tbody>
+                <tr>
+                    <td>
+                        @(i++)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MaterialName.Name)
+                    </td>
+                    <td>
+                        @item.Quantity
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Unit.Name)
+                    </td>
+                </tr>
+            </tbody>
+        }
+    }
+</table>
+

@@ -1,0 +1,78 @@
+﻿@model List<qlkho.Models.ExportItem>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Import</a></li>
+        <li class="breadcrumb-item active" aria-current="page">View Export</li>
+    </ol>
+</nav>
+
+<form asp-action="CreateBill">
+    <div class="form-group">
+        <select class="form-select" aria-label="Default select example" name="Reason" required>
+            <option selected>-- Select --</option>
+            <option value="1">Use</option>
+            <option value="2">Lend</option>
+        </select>
+    </div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Unit</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <button class="btn btn-outline-success updatecartitem"
+                                data-productid="@item.MaterialName.MaterialNameID">
+                            Update
+                        </button>
+                        <a asp-action="RemoveItem" asp-route-id="@item.MaterialName.MaterialNameID" class="btn btn-outline-danger">
+                            Delete
+                        </a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MaterialName.Name)
+                    </td>
+                    <td>
+                        <input asp-for="@item.Quantity" id="@($"quantity-{item.MaterialName.MaterialNameID}")" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Unit.Name)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <button type="submit" class="btn btn-warning">Import All</button>
+</form>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $(".updatecartitem").click(function (event) {
+                event.preventDefault();
+                var productid = $(this).attr("data-productid");
+                var quantity = $("#quantity-" + productid).val();
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.RouteUrl("updateitem")",
+                    data: {
+                        id: productid,
+                        quantity: quantity
+                    },
+                    success: function (result) {
+                        window.location.href = "@Url.RouteUrl("import")";
+                    }
+                });
+            });
+        });
+    </script>
+}

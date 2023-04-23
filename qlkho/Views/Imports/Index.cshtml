@@ -1,0 +1,115 @@
+﻿@using Newtonsoft.Json
+@inject IHttpContextAccessor HttpContextAccessor
+@model IEnumerable<qlkho.Models.Import>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Import</li>
+    </ol>
+</nav>
+
+<h1>Danh sách nhập hàng</h1>
+
+<p>
+    <a href="#" class="btn btn-primary btn-circle btn-lg" data-bs-toggle="modal" data-bs-target="#modalCreate">
+        <i class="fa-solid fa-file-import"></i>
+    </a>
+@{
+    var session = HttpContextAccessor.HttpContext.Session;
+    string jsoncart = session.GetString(qlkho.Controllers.ImportsController.CARTIMPORT);
+    if (jsoncart != null)
+    {
+        var cart = JsonConvert.DeserializeObject<List<ImportItem>>(jsoncart);
+        var c = cart.Count;
+        if (c > 0)
+        {
+            <a asp-action="ViewImport" class="btn btn-success btn-circle btn-lg position-relative">
+                <i class="fa-solid fa-list-ol"></i>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    @c
+                </span>
+            </a>
+        }
+    }
+}
+</p>
+
+<div class="modal fade" id="modalCreate" tabindex="-1" aria-labelledby="modalCreateLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="text-center mb-2">
+                    <span class="fw-bold fs-3" style="color:#7fad39">Import</span>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="p-2">
+                    <form asp-action="AddToCart">
+                        <div class="form-group">
+                            <label class="control-label">Material Name</label>
+                            <select name="MaterialNameID" class="form-control" asp-items="ViewBag.MaterialNameID"></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Expiry</label>
+                            <input type="date" class="form-control" name="Expiry" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Unit</label>
+                            <select name="UnitID" class="form-control" asp-items="ViewBag.UnitID"></select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="control-label mb-1">Quantity</label>
+                            <input type="number" name="Quantity" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Import" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Supplier)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th>
+                Date Created
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Supplier.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.Username)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateCreated)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ImportID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ImportID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ImportID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

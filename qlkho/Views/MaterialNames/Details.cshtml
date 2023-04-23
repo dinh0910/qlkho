@@ -1,0 +1,47 @@
+﻿@model IEnumerable<qlkho.Models.MaterialLog>
+
+@{
+    ViewData["Title"] = "Details";
+    var i = 1;
+}
+
+<h1>Details</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>STT</th>
+            <th>User</th>
+            <th>Material Name</th>
+            <th>Expiry</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td>@(i++)</td>
+                <td>@Html.DisplayFor(m => item.User.Username)</td>
+                <td>@Html.DisplayFor(m => item.Material.MaterialName.Name)</td>
+                <td>@Html.DisplayFor(m => item.Material.Expiry)</td>
+                <td>
+                    @if(item.Material.Status == 0)
+                    {
+                        <span class="badge rounded-pill bg-gradient-primary fs-6">Stored</span>
+                    }
+                    else if (item.Material.Status == 1)
+                    {
+                        <span class="badge rounded-pill bg-gradient-warning">Take Away</span>
+                    } else if(item.Material.Status == 2)
+                    {
+                        <span class="badge rounded-pill bg-gradient-secondary">Took Away</span>
+                    } else
+                    {
+                        <span class="badge rounded-pill bg-gradient-danger">Returned</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
