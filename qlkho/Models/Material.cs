@@ -6,12 +6,14 @@ namespace qlkho.Models
     {
         public int MaterialID { get; set; }
 
+        public int UserID { get; set; }
+        public User? User { get; set; }
+
         public int MaterialNameID { get; set; }
         public MaterialName? MaterialName { get; set; }
 
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
-
         public DateTime Expiry {  get; set; }
 
         public byte Status { get; set; }

@@ -122,6 +122,7 @@ namespace qlkho.Migrations
                 {
                     MaterialID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    UserID = table.Column<int>(type: "int", nullable: false),
                     MaterialNameID = table.Column<int>(type: "int", nullable: false),
                     Expiry = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<byte>(type: "tinyint", nullable: true)
@@ -135,33 +136,8 @@ namespace qlkho.Migrations
                         principalTable: "MaterialName",
                         principalColumn: "MaterialNameID",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "MaterialLog",
-                columns: table => new
-                {
-                    MaterialLogID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    MaterialID = table.Column<int>(type: "int", nullable: false),
-                    Stored = table.Column<bool>(type: "bit", nullable: true),
-                    TakeAway = table.Column<bool>(type: "bit", nullable: true),
-                    TookAway = table.Column<bool>(type: "bit", nullable: true),
-                    Returned = table.Column<bool>(type: "bit", nullable: true),
-                    UserID = table.Column<int>(type: "int", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MaterialLog", x => x.MaterialLogID);
                     table.ForeignKey(
-                        name: "FK_MaterialLog_Material_MaterialID",
-                        column: x => x.MaterialID,
-                        principalTable: "Material",
-                        principalColumn: "MaterialID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_MaterialLog_User_UserID",
+                        name: "FK_Material_User_UserID",
                         column: x => x.UserID,
                         principalTable: "User",
                         principalColumn: "UserID",
@@ -174,13 +150,8 @@ namespace qlkho.Migrations
                 column: "MaterialNameID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MaterialLog_MaterialID",
-                table: "MaterialLog",
-                column: "MaterialID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MaterialLog_UserID",
-                table: "MaterialLog",
+                name: "IX_Material_UserID",
+                table: "Material",
                 column: "UserID");
 
             migrationBuilder.CreateIndex(
@@ -206,9 +177,6 @@ namespace qlkho.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "MaterialLog");
-
             migrationBuilder.DropTable(
                 name: "Material");
 

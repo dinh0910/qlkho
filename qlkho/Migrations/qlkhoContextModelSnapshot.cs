@@ -212,49 +212,16 @@ namespace qlkho.Migrations
                     b.Property<byte>("Status")
                         .HasColumnType("tinyint");
 
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
                     b.HasKey("MaterialID");
 
                     b.HasIndex("MaterialNameID");
 
-                    b.ToTable("Material");
-                });
-
-            modelBuilder.Entity("qlkho.Models.MaterialLog", b =>
-                {
-                    b.Property<int>("MaterialLogID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaterialLogID"), 1L, 1);
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("MaterialID")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Returned")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Stored")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("TakeAway")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("TookAway")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("UserID")
-                        .HasColumnType("int");
-
-                    b.HasKey("MaterialLogID");
-
-                    b.HasIndex("MaterialID");
-
                     b.HasIndex("UserID");
 
-                    b.ToTable("MaterialLog");
+                    b.ToTable("Material");
                 });
 
             modelBuilder.Entity("qlkho.Models.MaterialName", b =>
@@ -522,24 +489,13 @@ namespace qlkho.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("MaterialName");
-                });
-
-            modelBuilder.Entity("qlkho.Models.MaterialLog", b =>
-                {
-                    b.HasOne("qlkho.Models.Material", "Material")
-                        .WithMany()
-                        .HasForeignKey("MaterialID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("qlkho.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Material");
+                    b.Navigation("MaterialName");
 
                     b.Navigation("User");
                 });

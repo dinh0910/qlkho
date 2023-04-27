@@ -26,8 +26,6 @@ namespace qlkho.Data
 
         public DbSet<qlkho.Models.Material>? Material { get; set; }
 
-        public DbSet<qlkho.Models.MaterialLog>? MaterialLog { get; set; }
-
         public DbSet<qlkho.Models.Unit>? Unit { get; set; }
 
         public DbSet<qlkho.Models.Supplier>? Supplier { get; set; }

@@ -275,18 +275,6 @@ namespace qlkho.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            var m = await _context.Material.ToListAsync();
-            foreach (var item in m)
-            {
-                var c = new MaterialLog();
-                c.MaterialID = item.MaterialID;
-                c.Stored = true;
-                c.TakeAway = false;
-                c.TookAway = false;
-                c.Returned = false;
-                c.UserID = (int)HttpContext.Session.GetInt32("_UserID");
-                _context.Add(c);
-            }
             await _context.SaveChangesAsync();
             ClearCart();
             return RedirectToAction(nameof(Index));

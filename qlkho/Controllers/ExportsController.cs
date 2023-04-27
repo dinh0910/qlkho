@@ -105,11 +105,10 @@ namespace qlkho.Controllers
         [Route("/viewexport", Name = "export")]
         public IActionResult ViewExport()
         {
-            ViewData["SupplierID"] = new SelectList(_context.Supplier, "SupplierID", "Name");
             return View(GetCartItems());
         }
 
-        public async Task<IActionResult> CreateBill(byte Reason)
+        public async Task<IActionResult> CreateBill()
         {
             // lưu hóa đơn
             var bill = new Export();
@@ -129,8 +128,17 @@ namespace qlkho.Controllers
                 b.UnitID = i.Unit.UnitID;
                 b.Quantity = i.Quantity;
 
-                //var sp = _context.MaterialName.FirstOrDefault(s => s.MaterialNameID == b.MaterialNameID);
-                //sp.Count += i.Quantity;
+                var count = i.Quantity;
+                var d = _context.Material.Where(s => s.MaterialNameID == i.MaterialName.MaterialNameID && s.Status == 0);
+                foreach (var item in d)
+                {
+                    if (0 < count)
+                    {
+                        item.Status = 2;
+                        count--;
+                    }
+                }
+
                 _context.Add(b);
             }
             await _context.SaveChangesAsync();

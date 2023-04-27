@@ -29,9 +29,9 @@ namespace qlkho.Controllers
         // GET: MaterialNames/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            var materialName = _context.MaterialLog
-                .Include(m => m.Material).Include(m => m.Material.MaterialName).Include(m => m.User)
-                .Where(m => m.Material.MaterialNameID == id);
+            var materialName = _context.Material
+                .Include(m => m.MaterialName).Include(m => m.User)
+                .Where(m => m.MaterialNameID == id);
 
             if (materialName == null)
             {

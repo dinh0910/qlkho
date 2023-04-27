@@ -1,4 +1,4 @@
-﻿@model IEnumerable<qlkho.Models.MaterialLog>
+﻿@model IEnumerable<qlkho.Models.Material>
 
 @{
     ViewData["Title"] = "Details";
@@ -23,22 +23,19 @@
             <tr>
                 <td>@(i++)</td>
                 <td>@Html.DisplayFor(m => item.User.Username)</td>
-                <td>@Html.DisplayFor(m => item.Material.MaterialName.Name)</td>
-                <td>@Html.DisplayFor(m => item.Material.Expiry)</td>
+                <td>@Html.DisplayFor(m => item.MaterialName.Name)</td>
+                <td>@Html.DisplayFor(m => item.Expiry)</td>
                 <td>
-                    @if(item.Material.Status == 0)
+                    @if(item.Status == 0)
                     {
-                        <span class="badge rounded-pill bg-gradient-primary fs-6">Stored</span>
+                        <span class="badge rounded-pill bg-gradient-primary" style="font-size: 13px;">Stored</span>
                     }
-                    else if (item.Material.Status == 1)
+                    else if (item.Status == 1)
                     {
-                        <span class="badge rounded-pill bg-gradient-warning">Take Away</span>
-                    } else if(item.Material.Status == 2)
+                        <span class="badge rounded-pill bg-gradient-warning" style="font-size: 13px;">Lent</span>
+                    } else if(item.Status == 2)
                     {
-                        <span class="badge rounded-pill bg-gradient-secondary">Took Away</span>
-                    } else
-                    {
-                        <span class="badge rounded-pill bg-gradient-danger">Returned</span>
+                        <span class="badge rounded-pill bg-gradient-secondary" style="font-size: 13px;">Used</span>
                     }
                 </td>
             </tr>

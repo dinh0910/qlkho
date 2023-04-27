@@ -137,7 +137,6 @@ namespace qlkho.Controllers
                 {
                     if(0 < count)
                     {
-                        //var material = _context.Material.First(s => s.MaterialNameID == item.MaterialNameID && s.Status == 0);
                         item.Status = 1;
                         count--;
                     }
@@ -146,21 +145,6 @@ namespace qlkho.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            var m = await _context.Material.ToListAsync();
-            foreach (var item in m)
-            {
-                var c = new MaterialLog();
-                if (c.MaterialID == item.MaterialID)
-                {
-                    c.Stored = false;
-                    c.TakeAway = true;
-                    c.TookAway = false;
-                    c.Returned = false;
-                    c.UserID = (int)HttpContext.Session.GetInt32("_UserID");
-                    _context.Update(c);
-                    await _context.SaveChangesAsync();
-                }
-            }
             await _context.SaveChangesAsync();
             ClearCart();
             return RedirectToAction(nameof(Index));
