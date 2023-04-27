@@ -1,6 +1,6 @@
 ﻿@using Newtonsoft.Json
 @inject IHttpContextAccessor HttpContextAccessor
-@model IEnumerable<qlkho.Models.Import>
+@model IEnumerable<qlkho.Models.Lend>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,7 +13,7 @@
     </ol>
 </nav>
 
-<h1>Danh sách nhập hàng</h1>
+<h1>Lend List</h1>
 
 <p>
     <a href="#" class="btn btn-primary btn-circle btn-lg" data-bs-toggle="modal" data-bs-target="#modalCreate">
@@ -21,14 +21,14 @@
     </a>
     @{
         var session = HttpContextAccessor.HttpContext.Session;
-        string jsoncart = session.GetString(qlkho.Controllers.ImportsController.CARTIMPORT);
+        string jsoncart = session.GetString(qlkho.Controllers.LendsController.CARTLEND);
         if (jsoncart != null)
         {
-            var cart = JsonConvert.DeserializeObject<List<ImportItem>>(jsoncart);
+            var cart = JsonConvert.DeserializeObject<List<LendItem>>(jsoncart);
             var c = cart.Count;
             if (c > 0)
             {
-                <a asp-action="ViewImport" class="btn btn-success btn-circle btn-lg position-relative">
+                <a asp-action="ViewLend" class="btn btn-success btn-circle btn-lg position-relative">
                     <i class="fa-solid fa-list-ol"></i>
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                         @c
@@ -44,20 +44,16 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div class="text-center mb-2">
-                    <span class="fw-bold fs-3" style="color:#7fad39">Import</span>
+                    <span class="fw-bold fs-3" style="color:#7fad39">Lend</span>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="p-2">
-                    <form asp-action="AddToCart">
+                    <form asp-action="AddToLend">
                         <div class="form-group">
                             <label class="control-label">Material Name</label>
                             <select name="MaterialNameID" class="form-control" asp-items="ViewBag.MaterialNameID"></select>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label">Expiry</label>
-                            <input type="date" class="form-control" name="Expiry" />
                         </div>
                         <div class="form-group">
                             <label class="control-label">Unit</label>
@@ -81,13 +77,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Supplier)
+                Date
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.User)
+                Organization Name
             </th>
             <th>
-                Date Created
+                User
+            </th>
+            <th>
+                Description
             </th>
             <th></th>
         </tr>
@@ -97,18 +96,16 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Supplier.Name)
+                    @Html.DisplayFor(modelItem => item.DateCreated)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrganizationName)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.User.Username)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.DateCreated)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.ImportID">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.ImportID">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.ImportID">Delete</a>
+                    <a asp-action="Details" asp-route-id="@item.LendID">Details</a>
                 </td>
             </tr>
         }

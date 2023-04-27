@@ -13,29 +13,29 @@
     </ol>
 </nav>
 
-<h1>Danh sách xuất hàng</h1>
+<h1>Export List</h1>
 
 <p>
     <a href="#" class="btn btn-primary btn-circle btn-lg" data-bs-toggle="modal" data-bs-target="#modalCreate">
         <i class="fa-solid fa-file-export"></i>
     </a>
     @{
-        var session = HttpContextAccessor.HttpContext.Session;
-        string jsoncart = session.GetString(qlkho.Controllers.ExportsController.CARTEXPORT);
-        if (jsoncart != null)
+    var session = HttpContextAccessor.HttpContext.Session;
+    string jsoncart = session.GetString(qlkho.Controllers.ExportsController.CARTEXPORT);
+    if (jsoncart != null)
+    {
+        var cart = JsonConvert.DeserializeObject<List<ImportItem>>(jsoncart);
+        var c = cart.Count;
+        if (c > 0)
         {
-            var cart = JsonConvert.DeserializeObject<List<ImportItem>>(jsoncart);
-            var c = cart.Count;
-            if (c > 0)
-            {
-                <a asp-action="ViewExport" class="btn btn-success btn-circle btn-lg position-relative">
-                    <i class="fa-solid fa-list-ol"></i>
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        @c
-                    </span>
-                </a>
-            }
+            <a asp-action="ViewExport" class="btn btn-success btn-circle btn-lg position-relative">
+                <i class="fa-solid fa-list-ol"></i>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    @c
+                </span>
+            </a>
         }
+    }
     }
 </p>
 
@@ -81,9 +81,6 @@
             </th>
             <th>
                 Date
-            </th>
-            <th>
-                Reason
             </th>
             <th></th>
         </tr>

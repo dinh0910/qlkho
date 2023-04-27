@@ -22,13 +22,20 @@ namespace qlkho.Models
         public int MaterialNameID { get; set; }
         public MaterialName? MaterialName { get; set; }
 
-        public byte Status { get; set; }
-
         public int Quantity { get; set; }
 
         public int UnitID { get; set; }
         public Unit? Unit { get; set; }
     }
 
+    public class LendItem
+    {
+        public int MaterialNameID { get; set; }
+        public MaterialName? MaterialName { get; set; }
 
+        public int Quantity { get; set; }
+
+        public int UnitID { get; set; }
+        public Unit? Unit { get; set; }
+    }
 }

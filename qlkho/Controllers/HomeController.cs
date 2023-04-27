@@ -59,7 +59,7 @@ namespace qlkho.Controllers
                     HttpContext.Session.SetInt32(SessionRole, (int)taiKhoan.RoleID);
 
                     _notifyService.Success("Đăng nhập thành công!");
-                    return View(nameof(Index));
+                    return RedirectToAction("Index", "Home");
                 }
             }
             _notifyService.Error("Đăng nhập không thành công!");

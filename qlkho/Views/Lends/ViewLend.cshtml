@@ -1,21 +1,25 @@
-﻿@model List<qlkho.Models.ExportItem>
+﻿@model List<qlkho.Models.LendItem>
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/">Home</a></li>
-        <li class="breadcrumb-item"><a asp-action="Index">Import</a></li>
-        <li class="breadcrumb-item active" aria-current="page">View Export</li>
+        <li class="breadcrumb-item"><a asp-action="Index">Lend</a></li>
+        <li class="breadcrumb-item active" aria-current="page">View Lend</li>
     </ol>
 </nav>
 
 <form asp-action="CreateBill">
+    <div class="form-group">
+        <label for="OrganizationName" class="control-label">Organization Name</label>
+        <input id="OrganizationName" name="OrganizationName" type="text" class="form-control" required />
+    </div>
     <table class="table table-hover">
         <thead>
             <tr>
                 <th></th>
                 <th>Name</th>
-                <th>Unit</th>
                 <th>Quantity</th>
+                <th>Unit</th>
             </tr>
         </thead>
         <tbody>
@@ -35,16 +39,16 @@
                         @Html.DisplayFor(modelItem => item.MaterialName.Name)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Unit.Name)
+                        <input asp-for="@item.Quantity" id="@($"quantity-{item.MaterialName.MaterialNameID}")" />
                     </td>
                     <td>
-                        <input asp-for="@item.Quantity" id="@($"quantity-{item.MaterialName.MaterialNameID}")" />
+                        @Html.DisplayFor(modelItem => item.Unit.Name)
                     </td>
                 </tr>
             }
         </tbody>
     </table>
-    <button type="submit" class="btn btn-warning">Import All</button>
+    <button type="submit" class="btn btn-warning">Lend All</button>
 </form>
 
 @section Scripts {
@@ -56,13 +60,13 @@
                 var quantity = $("#quantity-" + productid).val();
                 $.ajax({
                     type: "POST",
-                    url: "@Url.RouteUrl("updateitem")",
+                    url: "@Url.RouteUrl("updatelend")",
                     data: {
                         id: productid,
                         quantity: quantity
                     },
                     success: function (result) {
-                        window.location.href = "@Url.RouteUrl("import")";
+                        window.location.href = "@Url.RouteUrl("lend")";
                     }
                 });
             });

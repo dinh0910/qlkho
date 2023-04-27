@@ -7,7 +7,6 @@ using qlkho.Models;
 
 namespace qlkho.Controllers
 {
-    [Area("Admin")]
     public class LendsController : Controller
     {
         private readonly qlkhoContext _context;
@@ -17,66 +16,66 @@ namespace qlkho.Controllers
             _context = context;
         }
 
-        public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var qlkhoContext = _context.Lend.Include(i => i.User);
             ViewData["MaterialNameID"] = new SelectList(_context.MaterialName, "MaterialNameID", "Name");
             ViewData["UnitID"] = new SelectList(_context.Unit, "UnitID", "Name");
-            return View();
+            return View(await qlkhoContext.ToListAsync());
         }
 
         public const string CARTLEND = "addlend";
 
-        List<ImportItem> GetCartItems()
+        List<LendItem> GetCartItems()
         {
             var session = HttpContext.Session;
             string jsoncart = session.GetString(CARTLEND);
             if (jsoncart != null)
             {
-                return JsonConvert.DeserializeObject<List<ImportItem>>(jsoncart);
+                return JsonConvert.DeserializeObject<List<LendItem>>(jsoncart);
             }
-            return new List<ImportItem>();
+            return new List<LendItem>();
         }
 
-        void SaveCartSession(List<ImportItem> list)
+        void SaveCartSession(List<LendItem> list)
         {
             var session = HttpContext.Session;
             string jsoncart = JsonConvert.SerializeObject(list);
-            session.SetString("addcart", jsoncart);
+            session.SetString("addlend", jsoncart);
         }
 
         void ClearCart()
         {
             var session = HttpContext.Session;
-            session.Remove("addcart");
+            session.Remove("addlend");
         }
 
-        public async Task<IActionResult> AddToCart([Bind("MaterialNameID,Expiry,Quantity,UnitID")] ImportItem importItem)
+        public async Task<IActionResult> AddToLend([Bind("MaterialNameID,Quantity,UnitID")] LendItem lendItem)
         {
             var product = await _context.MaterialName
-                .FirstOrDefaultAsync(m => m.MaterialNameID == importItem.MaterialNameID);
+                .FirstOrDefaultAsync(m => m.MaterialNameID == lendItem.MaterialNameID);
             var dvt = await _context.Unit
-                .FirstOrDefaultAsync(m => m.UnitID == importItem.UnitID);
+                .FirstOrDefaultAsync(m => m.UnitID == lendItem.UnitID);
             //if (product == null)
             //{
             //    _toastNotification.AddInfoToastMessage("Sản phẩm không tồn tại.");
             //}
             var cart = GetCartItems();
-            var item = cart.Find(p => p.MaterialName.MaterialNameID == importItem.MaterialNameID);
+            var item = cart.Find(p => p.MaterialName.MaterialNameID == lendItem.MaterialNameID);
             if (item != null)
             {
-                item.Quantity += importItem.Quantity;
+                item.Quantity += lendItem.Quantity;
             }
             else
             {
-                cart.Add(new ImportItem() { MaterialName = product, Expiry = importItem.Expiry, Unit = dvt, Quantity = importItem.Quantity });
+                cart.Add(new LendItem() { MaterialName = product, Unit = dvt, Quantity = lendItem.Quantity });
             }
             SaveCartSession(cart);
             //return RedirectToAction(nameof(ViewImport));
-            return RedirectToAction("Index", "Imports");
+            return RedirectToAction("Index", "Lends");
         }
 
-        [Route("/updateitem", Name = "updateitem")]
+        [Route("/updatelend", Name = "updatelend")]
         public async Task<IActionResult> UpdateItem(int id, int quantity)
         {
             var cart = GetCartItems();
@@ -87,7 +86,7 @@ namespace qlkho.Controllers
             }
             item.Quantity = quantity;
             SaveCartSession(cart);
-            return RedirectToAction(nameof(ViewImport));
+            return RedirectToAction(nameof(ViewLend));
         }
 
         public async Task<IActionResult> RemoveItem(int id)
@@ -99,22 +98,21 @@ namespace qlkho.Controllers
                 cart.Remove(item);
             }
             SaveCartSession(cart);
-            return RedirectToAction(nameof(ViewImport));
+            return RedirectToAction(nameof(ViewLend));
         }
 
-        [Route("/viewimport", Name = "import")]
-        public IActionResult ViewImport()
+        [Route("/viewlend", Name = "lend")]
+        public IActionResult ViewLend()
         {
             ViewData["SupplierID"] = new SelectList(_context.Supplier, "SupplierID", "Name");
             return View(GetCartItems());
         }
 
-        public async Task<IActionResult> CreateBill(int SupplierID)
+        public async Task<IActionResult> CreateBill()
         {
             // lưu hóa đơn
-            var bill = new Import();
+            var bill = new Lend();
             bill.DateCreated = DateTime.Now;
-            bill.SupplierID = SupplierID;
             bill.UserID = (int)HttpContext.Session.GetInt32("_UserID");
 
             _context.Add(bill);
@@ -125,21 +123,22 @@ namespace qlkho.Controllers
             //chi tiết hóa đơn
             foreach (var i in cart)
             {
-                var b = new ImportLog();
-                b.ImportID = bill.ImportID;
+                var b = new LendLog();
+                b.LendID = bill.LendID;
                 b.MaterialNameID = i.MaterialName.MaterialNameID;
                 b.UnitID = i.Unit.UnitID;
                 b.Quantity = i.Quantity;
                 for (int j = 0; j < i.Quantity; j++)
                 {
                     var d = new Material();
-                    d.MaterialNameID = b.MaterialNameID;
-                    d.Expiry = i.Expiry;
-                    d.Status = 0;
-                    _context.Add(d);
-                    await _context.SaveChangesAsync();
+                    if (d.MaterialNameID == b.MaterialNameID)
+                    {
+                        d.Status = 1;
+                        _context.Add(d);
+                        await _context.SaveChangesAsync();
+                    }
                 }
-
+                
                 var sp = _context.MaterialName.FirstOrDefault(s => s.MaterialNameID == b.MaterialNameID);
                 sp.Count += i.Quantity;
                 _context.Add(b);
@@ -150,13 +149,16 @@ namespace qlkho.Controllers
             foreach (var item in m)
             {
                 var c = new MaterialLog();
-                c.MaterialID = item.MaterialID;
-                c.Stored = true;
-                c.TakeAway = false;
-                c.TookAway = false;
-                c.Returned = false;
-                c.UserID = (int)HttpContext.Session.GetInt32("_UserID");
-                _context.Add(c);
+                if (c.MaterialID == item.MaterialID)
+                {
+                    c.Stored = false;
+                    c.TakeAway = true;
+                    c.TookAway = false;
+                    c.Returned = false;
+                    c.UserID = (int)HttpContext.Session.GetInt32("_UserID");
+                    _context.Add(c);
+                    await _context.SaveChangesAsync();
+                }
             }
             await _context.SaveChangesAsync();
             ClearCart();
@@ -165,15 +167,15 @@ namespace qlkho.Controllers
 
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Import == null)
+            if (id == null || _context.Lend == null)
             {
                 return NotFound();
             }
 
-            ViewBag.importlog = _context.ImportLog.Include(s => s.MaterialName).Include(s => s.Unit);
+            ViewBag.importlog = _context.LendLog.Include(s => s.MaterialName).Include(s => s.Unit);
 
-            var import = _context.Import.Include(i => i.User).Include(i => i.Supplier)
-                .FirstOrDefault(m => m.ImportID == id);
+            var import = _context.Lend.Include(i => i.User)
+                .FirstOrDefault(m => m.LendID == id);
             if (import == null)
             {
                 return NotFound();
