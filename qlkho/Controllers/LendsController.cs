@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using qlkho.Data;
 using qlkho.Models;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using XAct;
 
 namespace qlkho.Controllers
 {
@@ -108,12 +111,13 @@ namespace qlkho.Controllers
             return View(GetCartItems());
         }
 
-        public async Task<IActionResult> CreateBill()
+        public async Task<IActionResult> CreateBill(string OrganizationName)
         {
             // lưu hóa đơn
             var bill = new Lend();
             bill.DateCreated = DateTime.Now;
             bill.UserID = (int)HttpContext.Session.GetInt32("_UserID");
+            bill.OrganizationName = OrganizationName;
 
             _context.Add(bill);
             await _context.SaveChangesAsync();
@@ -127,20 +131,17 @@ namespace qlkho.Controllers
                 b.LendID = bill.LendID;
                 b.MaterialNameID = i.MaterialName.MaterialNameID;
                 b.UnitID = i.Unit.UnitID;
-                b.Quantity = i.Quantity;
-                for (int j = 0; j < i.Quantity; j++)
+                var count = i.Quantity;
+                var d = _context.Material.Where(s => s.MaterialNameID == i.MaterialName.MaterialNameID && s.Status == 0);
+                foreach (var item in d)
                 {
-                    var d = new Material();
-                    if (d.MaterialNameID == b.MaterialNameID)
+                    if(0 < count)
                     {
-                        d.Status = 1;
-                        _context.Add(d);
-                        await _context.SaveChangesAsync();
+                        //var material = _context.Material.First(s => s.MaterialNameID == item.MaterialNameID && s.Status == 0);
+                        item.Status = 1;
+                        count--;
                     }
                 }
-                
-                var sp = _context.MaterialName.FirstOrDefault(s => s.MaterialNameID == b.MaterialNameID);
-                sp.Count += i.Quantity;
                 _context.Add(b);
                 await _context.SaveChangesAsync();
             }
@@ -156,7 +157,7 @@ namespace qlkho.Controllers
                     c.TookAway = false;
                     c.Returned = false;
                     c.UserID = (int)HttpContext.Session.GetInt32("_UserID");
-                    _context.Add(c);
+                    _context.Update(c);
                     await _context.SaveChangesAsync();
                 }
             }
