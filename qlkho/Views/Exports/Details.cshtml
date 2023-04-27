@@ -1,0 +1,48 @@
+﻿<div class="p-3 my-4">
+    <a id="print" onclick="printContent('printerDiv');" class="btn btn-primary btn-circle btn-lg">
+        <i class="fa-solid fa-print"></i>
+    </a>
+</div>
+
+<div id="printerDiv">
+    <h2 class="text-center text-uppercase mb-3">Delivery Docket</h2>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="mb-4"><b>Supplier Name:</b> @*@Model.Supplier.Name*@</div>
+            <div class="mb-4"><b>Full Name:</b> @*@Model.User.Username*@</div>
+            <div class="mb-4">
+                <b>Date:</b> @*@String.Format("{0:dd/MM/yyyy}", Model.DateCreated)*@
+            </div>
+        </div>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    #
+                </th>
+                <th>
+                    Material Name
+                </th>
+                <th>
+                    Unit
+                </th>
+                <th>
+                    Quantity
+                </th>
+            </tr>
+        </thead>
+
+    </table>
+</div>
+
+<script>
+    function printContent(el) {
+        var restorepage = $('body').html();
+        var printcontent = $('#' + el).clone();
+        $('body').empty().html(printcontent);
+        window.print();
+        $('body').html(restorepage);
+    }
+</script>

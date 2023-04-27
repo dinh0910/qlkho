@@ -13,8 +13,6 @@ namespace qlkho.Models
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime DateCreated { get; set; }
 
-        public byte Reason { get; set; }
-
         public string? Description { get; set; } = null;
     }
 }

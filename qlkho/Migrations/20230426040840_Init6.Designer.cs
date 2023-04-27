@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using qlkho.Data;
 
@@ -11,9 +12,10 @@ using qlkho.Data;
 namespace qlkho.Migrations
 {
     [DbContext(typeof(qlkhoContext))]
-    partial class qlkhoContextModelSnapshot : ModelSnapshot
+    [Migration("20230426040840_Init6")]
+    partial class Init6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -135,64 +137,6 @@ namespace qlkho.Migrations
                     b.HasIndex("UnitID");
 
                     b.ToTable("ImportLog");
-                });
-
-            modelBuilder.Entity("qlkho.Models.Lend", b =>
-                {
-                    b.Property<int>("LendID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LendID"), 1L, 1);
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OrganizationName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserID")
-                        .HasColumnType("int");
-
-                    b.HasKey("LendID");
-
-                    b.HasIndex("UserID");
-
-                    b.ToTable("Lend");
-                });
-
-            modelBuilder.Entity("qlkho.Models.LendLog", b =>
-                {
-                    b.Property<int>("LendLogID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LendLogID"), 1L, 1);
-
-                    b.Property<int>("LendID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MaterialNameID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UnitID")
-                        .HasColumnType("int");
-
-                    b.HasKey("LendLogID");
-
-                    b.HasIndex("LendID");
-
-                    b.HasIndex("MaterialNameID");
-
-                    b.HasIndex("UnitID");
-
-                    b.ToTable("LendLog");
                 });
 
             modelBuilder.Entity("qlkho.Models.Material", b =>
@@ -470,44 +414,6 @@ namespace qlkho.Migrations
                         .IsRequired();
 
                     b.Navigation("Import");
-
-                    b.Navigation("MaterialName");
-
-                    b.Navigation("Unit");
-                });
-
-            modelBuilder.Entity("qlkho.Models.Lend", b =>
-                {
-                    b.HasOne("qlkho.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("qlkho.Models.LendLog", b =>
-                {
-                    b.HasOne("qlkho.Models.Lend", "Lend")
-                        .WithMany()
-                        .HasForeignKey("LendID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("qlkho.Models.MaterialName", "MaterialName")
-                        .WithMany()
-                        .HasForeignKey("MaterialNameID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("qlkho.Models.Unit", "Unit")
-                        .WithMany()
-                        .HasForeignKey("UnitID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Lend");
 
                     b.Navigation("MaterialName");
 

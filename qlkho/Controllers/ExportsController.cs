@@ -114,7 +114,6 @@ namespace qlkho.Controllers
             // lưu hóa đơn
             var bill = new Export();
             bill.DateCreated = DateTime.Now;
-            bill.Reason = Reason;
             bill.UserID = (int)HttpContext.Session.GetInt32("_UserID");
 
             _context.Add(bill);

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -11,155 +7,30 @@ using qlkho.Models;
 
 namespace qlkho.Controllers
 {
-    public class ImportsController : Controller
+    [Area("Admin")]
+    public class LendsController : Controller
     {
         private readonly qlkhoContext _context;
 
-        public ImportsController(qlkhoContext context)
+        public LendsController(qlkhoContext context)
         {
             _context = context;
         }
 
-        // GET: Imports
-        public async Task<IActionResult> Index()
+        public ActionResult Index()
         {
-            var qlkhoContext = _context.Import.Include(i => i.Supplier).Include(i => i.User);
+            var qlkhoContext = _context.Lend.Include(i => i.User);
             ViewData["MaterialNameID"] = new SelectList(_context.MaterialName, "MaterialNameID", "Name");
             ViewData["UnitID"] = new SelectList(_context.Unit, "UnitID", "Name");
-            return View(await qlkhoContext.ToListAsync());
-        }
-
-        // GET: Imports/Create
-        public IActionResult Create()
-        {
-            ViewData["SupplierID"] = new SelectList(_context.Supplier, "SupplierID", "SupplierID");
-            ViewData["UserID"] = new SelectList(_context.User, "UserID", "UserID");
             return View();
         }
 
-        // POST: Imports/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ImportID,SupplierID,UserID,DateCreated")] Import import)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(import);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["SupplierID"] = new SelectList(_context.Supplier, "SupplierID", "SupplierID", import.SupplierID);
-            ViewData["UserID"] = new SelectList(_context.User, "UserID", "UserID", import.UserID);
-            return View(import);
-        }
-
-        // GET: Imports/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Import == null)
-            {
-                return NotFound();
-            }
-
-            var import = await _context.Import.FindAsync(id);
-            if (import == null)
-            {
-                return NotFound();
-            }
-            ViewData["SupplierID"] = new SelectList(_context.Supplier, "SupplierID", "SupplierID", import.SupplierID);
-            ViewData["UserID"] = new SelectList(_context.User, "UserID", "UserID", import.UserID);
-            return View(import);
-        }
-
-        // POST: Imports/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ImportID,SupplierID,UserID,DateCreated")] Import import)
-        {
-            if (id != import.ImportID)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(import);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ImportExists(import.ImportID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["SupplierID"] = new SelectList(_context.Supplier, "SupplierID", "SupplierID", import.SupplierID);
-            ViewData["UserID"] = new SelectList(_context.User, "UserID", "UserID", import.UserID);
-            return View(import);
-        }
-
-        // GET: Imports/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Import == null)
-            {
-                return NotFound();
-            }
-
-            var import = await _context.Import
-                .Include(i => i.Supplier)
-                .Include(i => i.User)
-                .FirstOrDefaultAsync(m => m.ImportID == id);
-            if (import == null)
-            {
-                return NotFound();
-            }
-
-            return View(import);
-        }
-
-        // POST: Imports/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.Import == null)
-            {
-                return Problem("Entity set 'qlkhoContext.Import'  is null.");
-            }
-            var import = await _context.Import.FindAsync(id);
-            if (import != null)
-            {
-                _context.Import.Remove(import);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool ImportExists(int id)
-        {
-          return (_context.Import?.Any(e => e.ImportID == id)).GetValueOrDefault();
-        }
-
-        public const string CARTIMPORT = "addcart";
+        public const string CARTLEND = "addlend";
 
         List<ImportItem> GetCartItems()
         {
             var session = HttpContext.Session;
-            string jsoncart = session.GetString(CARTIMPORT);
+            string jsoncart = session.GetString(CARTLEND);
             if (jsoncart != null)
             {
                 return JsonConvert.DeserializeObject<List<ImportItem>>(jsoncart);
@@ -259,7 +130,7 @@ namespace qlkho.Controllers
                 b.MaterialNameID = i.MaterialName.MaterialNameID;
                 b.UnitID = i.Unit.UnitID;
                 b.Quantity = i.Quantity;
-                for(int j = 0; j < i.Quantity; j++)
+                for (int j = 0; j < i.Quantity; j++)
                 {
                     var d = new Material();
                     d.MaterialNameID = b.MaterialNameID;
@@ -310,5 +181,6 @@ namespace qlkho.Controllers
 
             return View(import);
         }
+
     }
 }

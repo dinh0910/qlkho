@@ -39,5 +39,9 @@ namespace qlkho.Data
         public DbSet<qlkho.Models.Export>? Export { get; set; }
 
         public DbSet<qlkho.Models.ExportLog>? ExportLog { get; set; }
+        
+        public DbSet<qlkho.Models.Lend>? Lend { get; set; }
+
+        public DbSet<qlkho.Models.LendLog>? LendLog { get; set; }
     }
 }

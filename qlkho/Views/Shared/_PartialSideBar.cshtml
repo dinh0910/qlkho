@@ -13,7 +13,7 @@
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item active">
-        <a class="nav-link" href="index.html">
+        <a class="nav-link" href="/">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span>
         </a>
@@ -37,9 +37,9 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Custom Components:</h6>
-                <a class="collapse-item" asp-controller="MaterialTypes" asp-action="Index">Material Type</a>
-                <a class="collapse-item" asp-controller="MaterialTopics" asp-action="Index">Material Topic</a>
-                <a class="collapse-item" asp-controller="MaterialNames" asp-action="Index">Manager Material</a>
+                <a class="collapse-item" asp-controller="MaterialTypes" asp-action="Index">Material Type Manager</a>
+                <a class="collapse-item" asp-controller="MaterialTopics" asp-action="Index">Material Topic Manager</a>
+                <a class="collapse-item" asp-controller="MaterialNames" asp-action="Index">Material Manager</a>
             </div>
         </div>
     </li>
@@ -55,12 +55,14 @@
              data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Custom Import:</h6>
-                <a class="collapse-item" asp-controller="Units" asp-action="Index">Units</a>
-                <a class="collapse-item" asp-controller="Suppliers" asp-action="Index">Suppliers</a>
-                <h6 class="collapse-header">Manage Import:</h6>
+                <a class="collapse-item" asp-controller="Units" asp-action="Index">Unit Manager</a>
+                <a class="collapse-item" asp-controller="Suppliers" asp-action="Index">Supplier Manager</a>
+                <h6 class="collapse-header">Import Manager:</h6>
                 <a class="collapse-item" asp-controller="Imports" asp-action="Index">Import</a>
-                <h6 class="collapse-header">Manage Export:</h6>
+                <h6 class="collapse-header">Export Manager:</h6>
                 <a class="collapse-item" asp-controller="Exports" asp-action="Index">Export</a>
+                <h6 class="collapse-header">Lend Manager:</h6>
+                <a class="collapse-item" asp-controller="Lends" asp-action="Index">Lend</a>
             </div>
         </div>
     </li>
@@ -82,9 +84,9 @@
         </a>
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Manage User:</h6>
-                <a class="collapse-item" asp-controller="Roles" asp-action="Index">Role</a>
-                <a class="collapse-item" asp-controller="Users" asp-action="Index">Account</a>
+                <h6 class="collapse-header">User Manager:</h6>
+                <a class="collapse-item" asp-controller="Roles" asp-action="Index">Role Manager</a>
+                <a class="collapse-item" asp-controller="Users" asp-action="Index">Account Manager</a>
             </div>
         </div>
     </li>

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using qlkho.Data;
 
@@ -11,9 +12,10 @@ using qlkho.Data;
 namespace qlkho.Migrations
 {
     [DbContext(typeof(qlkhoContext))]
-    partial class qlkhoContextModelSnapshot : ModelSnapshot
+    [Migration("20230426041257_Init7")]
+    partial class Init7
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
