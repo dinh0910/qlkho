@@ -29,9 +29,12 @@ namespace qlkho.Controllers
         // GET: MaterialNames/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            var materialName = _context.Material
-                .Include(m => m.MaterialName).Include(m => m.User)
-                .Where(m => m.MaterialNameID == id);
+            var materialName = _context.Material.Where(s => s.MaterialNameID == id);
+            //var materialName = await _context.MaterialName.FirstOrDefaultAsync(s => s.MaterialNameID == id);
+
+            ViewBag.stored = _context.Material.Where(s => s.Status == 0 && s.MaterialNameID == id);
+            ViewBag.lent = _context.Material.Where(s => s.Status == 1 && s.MaterialNameID == id);
+            ViewBag.used = _context.Material.Where(s => s.Status == 2 && s.MaterialNameID == id);
 
             if (materialName == null)
             {

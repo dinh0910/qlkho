@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using qlkho.Data;
+using qlkho.Libs;
 using qlkho.Models;
 
 namespace qlkho.Controllers
@@ -48,7 +49,7 @@ namespace qlkho.Controllers
         // GET: Users/Create
         public IActionResult Create()
         {
-            ViewData["RoleID"] = new SelectList(_context.Role, "RoleID", "RoleID");
+            ViewData["RoleID"] = new SelectList(_context.Role, "RoleID", "Name");
             return View();
         }
 
@@ -61,11 +62,12 @@ namespace qlkho.Controllers
         {
             if (ModelState.IsValid)
             {
+                user.Password = SHA1.ComputeHash(user.Password);
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoleID"] = new SelectList(_context.Role, "RoleID", "RoleID", user.RoleID);
+            ViewData["RoleID"] = new SelectList(_context.Role, "RoleID", "Name", user.RoleID);
             return View(user);
         }
 
@@ -82,7 +84,7 @@ namespace qlkho.Controllers
             {
                 return NotFound();
             }
-            ViewData["RoleID"] = new SelectList(_context.Role, "RoleID", "RoleID", user.RoleID);
+            ViewData["RoleID"] = new SelectList(_context.Role, "RoleID", "Name", user.RoleID);
             return View(user);
         }
 
@@ -91,7 +93,7 @@ namespace qlkho.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserID,Username,Password,RoleID")] User user)
+        public async Task<IActionResult> Edit(int id, string? pw, [Bind("UserID,Username,Password,RoleID")] User user)
         {
             if (id != user.UserID)
             {
@@ -102,6 +104,10 @@ namespace qlkho.Controllers
             {
                 try
                 {
+                    if(pw != null)
+                    {
+                        user.Password = SHA1.ComputeHash(pw);
+                    }
                     _context.Update(user);
                     await _context.SaveChangesAsync();
                 }
@@ -118,7 +124,7 @@ namespace qlkho.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoleID"] = new SelectList(_context.Role, "RoleID", "RoleID", user.RoleID);
+            ViewData["RoleID"] = new SelectList(_context.Role, "RoleID", "Name", user.RoleID);
             return View(user);
         }
 

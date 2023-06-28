@@ -13,13 +13,26 @@
 </div>
 
 <div id="printerDiv">
+    <div class="row">
+        <div class="col-sm-7">
+            <h3 class="mb-1">
+                DNXH Sunshine An Giang
+            </h3>
+            <p class="mb-2">
+                193, Ly Thai To Street, My Long Ward, Long Xuyen City, An Giang Province
+            </p>
+        </div>
+    </div>
     <h2 class="text-center text-uppercase mb-3">warehouse receipt</h2>
     <div class="row">
         <div class="col-sm-6">
-            <div class="mb-4"><b>Supplier Name:</b> @Model.Supplier.Name</div>
-            <div class="mb-4"><b>Full Name:</b> @Model.User.Username</div>
-            <div class="mb-4">
+            <div class="mb-2"><b>Supplier Name:</b> @Model.Supplier.Name</div>
+            <div class="mb-2"><b>Full Name:</b> @Model.User.Username</div>
+            <div class="mb-2">
                 <b>Date:</b> @String.Format("{0:dd/MM/yyyy}", Model.DateCreated)
+            </div>
+            <div class="mb-2">
+                <b>Note: </b> @Model.Description
             </div>
         </div>
     </div>
@@ -41,11 +54,11 @@
                 </th>
             </tr>
         </thead>
-        @foreach (var item in km)
-        {
-            @if (item.ImportID == Model.ImportID)
+        <tbody>
+            @foreach (var item in km)
             {
-                <tbody>
+                @if (item.ImportID == Model.ImportID)
+                {
                     <tr>
                         <td>
                             @(i++)
@@ -60,9 +73,9 @@
                             @item.Quantity
                         </td>
                     </tr>
-                </tbody>
+                }
             }
-        }
+        </tbody>
     </table>
 </div>
 

@@ -24,6 +24,8 @@ namespace qlkho.Controllers
             var qlkhoContext = _context.Lend.Include(i => i.User);
             ViewData["MaterialNameID"] = new SelectList(_context.MaterialName, "MaterialNameID", "Name");
             ViewData["UnitID"] = new SelectList(_context.Unit, "UnitID", "Name");
+            ViewBag.material = _context.MaterialName;
+            ViewBag.m = _context.Material.Include(s => s.MaterialName).Where(s => s.Status == 0);
             return View(await qlkhoContext.ToListAsync());
         }
 
@@ -131,6 +133,7 @@ namespace qlkho.Controllers
                 b.LendID = bill.LendID;
                 b.MaterialNameID = i.MaterialName.MaterialNameID;
                 b.UnitID = i.Unit.UnitID;
+                b.Quantity = i.Quantity;
                 var count = i.Quantity;
                 var d = _context.Material.Where(s => s.MaterialNameID == i.MaterialName.MaterialNameID && s.Status == 0);
                 foreach (var item in d)
@@ -157,7 +160,7 @@ namespace qlkho.Controllers
                 return NotFound();
             }
 
-            ViewBag.importlog = _context.LendLog.Include(s => s.MaterialName).Include(s => s.Unit);
+            ViewBag.lendlog = _context.LendLog.Include(s => s.MaterialName).Include(s => s.Unit);
 
             var import = _context.Lend.Include(i => i.User)
                 .FirstOrDefault(m => m.LendID == id);

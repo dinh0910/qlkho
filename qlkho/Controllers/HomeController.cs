@@ -48,7 +48,7 @@ namespace qlkho.Controllers
                                                                             && r.Password == mahoamatkhau);
                 if (taiKhoan == null)
                 {
-                    _notifyService.Error("Đăng nhập không thành công!");
+                    _notifyService.Error("Login Unsuccessful!");
                 }
                 else
                 {
@@ -58,14 +58,13 @@ namespace qlkho.Controllers
                     HttpContext.Session.SetString(SessionPassword, taiKhoan.Password);
                     HttpContext.Session.SetInt32(SessionRole, (int)taiKhoan.RoleID);
 
-                    _notifyService.Success("Đăng nhập thành công!");
+                    _notifyService.Success("Login Successful!");
                     return RedirectToAction("Index", "Home");
                 }
             }
-            _notifyService.Error("Đăng nhập không thành công!");
+            _notifyService.Error("Login Unsuccessful!");
             return View(TaiKhoan);
         }
-
 
         public IActionResult Login()
         {
@@ -89,8 +88,8 @@ namespace qlkho.Controllers
         {
             HttpContext.Session.Remove("_UserID");
             HttpContext.Session.Remove("_Username");
-            HttpContext.Session.Remove("_UserID");
-            HttpContext.Session.Remove("_UserID");
+            HttpContext.Session.Remove("_Password");
+            HttpContext.Session.Remove("_Role");
             return RedirectToAction("Index", "Home");
         }
     }

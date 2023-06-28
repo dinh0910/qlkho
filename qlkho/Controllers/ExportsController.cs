@@ -22,6 +22,8 @@ namespace qlkho.Controllers
             var qlkhoContext = _context.Export.Include(i => i.User);
             ViewData["MaterialNameID"] = new SelectList(_context.MaterialName, "MaterialNameID", "Name");
             ViewData["UnitID"] = new SelectList(_context.Unit, "UnitID", "Name");
+            ViewBag.material = _context.MaterialName;
+            ViewBag.m = _context.Material.Include(s => s.MaterialName).Where(s => s.Status == 0);
             return View(await qlkhoContext.ToListAsync());
         }
 
@@ -144,6 +146,25 @@ namespace qlkho.Controllers
             await _context.SaveChangesAsync();
             ClearCart();
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null || _context.Export == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.exportlog = _context.ExportLog.Include(s => s.MaterialName).Include(s => s.Unit);
+
+            var import = _context.Export.Include(i => i.User)
+                .FirstOrDefault(m => m.ExportID == id);
+            if (import == null)
+            {
+                return NotFound();
+            }
+
+            return View(import);
         }
     }
 }

@@ -264,15 +264,14 @@ namespace qlkho.Controllers
                     var d = new Material();
                     d.MaterialNameID = b.MaterialNameID;
                     d.Expiry = i.Expiry;
+                    d.UserID = (int)HttpContext.Session.GetInt32("_UserID");
                     d.Status = 0;
                     _context.Add(d);
-                    await _context.SaveChangesAsync();
                 }
 
                 var sp = _context.MaterialName.FirstOrDefault(s => s.MaterialNameID == b.MaterialNameID);
                 sp.Count += i.Quantity;
                 _context.Add(b);
-                await _context.SaveChangesAsync();
             }
 
             await _context.SaveChangesAsync();

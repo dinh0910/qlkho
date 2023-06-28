@@ -3,11 +3,104 @@
 @{
     ViewData["Title"] = "Details";
     var i = 1;
+    var stored = ViewBag.stored as IQueryable<qlkho.Models.Material>;
+    var lent = ViewBag.lent as IQueryable<qlkho.Models.Material>;
+    var used = ViewBag.used as IQueryable<qlkho.Models.Material>;
+
+    int countS = stored.Count();
+    int countL = lent.Count();
+    int countU = used.Count();
 }
 
-<h1>Details</h1>
+@*<h1>@Model.Name</h1>*@
 
-<table class="table">
+
+
+@*<div class="row">
+    <!-- Earnings (Monthly) Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Stored
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            @countS
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Earnings (Monthly) Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Used
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@countU</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Earnings (Monthly) Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            Lent
+                        </div>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col-auto">
+                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">@countL</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fa-solid fa-file-export fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Requests Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            Returned
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fa-solid fa-rotate-right fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>*@
+
+<table class="table mt-3">
     <thead>
         <tr>
             <th>STT</th>
@@ -18,7 +111,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach(var item in Model)
+        @foreach (var item in Model)
         {
             <tr>
                 <td>@(i++)</td>
@@ -26,16 +119,17 @@
                 <td>@Html.DisplayFor(m => item.MaterialName.Name)</td>
                 <td>@Html.DisplayFor(m => item.Expiry)</td>
                 <td>
-                    @if(item.Status == 0)
+                    @if (item.Status == 0)
                     {
                         <span class="badge rounded-pill bg-gradient-primary" style="font-size: 13px;">Stored</span>
                     }
                     else if (item.Status == 1)
                     {
                         <span class="badge rounded-pill bg-gradient-warning" style="font-size: 13px;">Lent</span>
-                    } else if(item.Status == 2)
+                    }
+                    else if (item.Status == 2)
                     {
-                        <span class="badge rounded-pill bg-gradient-secondary" style="font-size: 13px;">Used</span>
+                        <span class="badge rounded-pill bg-gradient-success" style="font-size: 13px;">Used</span>
                     }
                 </td>
             </tr>

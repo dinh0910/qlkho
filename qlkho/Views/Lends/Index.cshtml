@@ -4,6 +4,8 @@
 
 @{
     ViewData["Title"] = "Index";
+    var m = ViewBag.material as IQueryable<qlkho.Models.MaterialName>;
+    var m1 = ViewBag.m as IQueryable<qlkho.Models.Material>;
 }
 
 <nav aria-label="breadcrumb">
@@ -53,7 +55,26 @@
                     <form asp-action="AddToLend">
                         <div class="form-group">
                             <label class="control-label">Material Name</label>
-                            <select name="MaterialNameID" class="form-control" asp-items="ViewBag.MaterialNameID"></select>
+                            <select name="MaterialNameID" class="form-control">
+                                <option>--Select--</option>
+                                @foreach (var item in m)
+                                {
+                                    if (item.Count > 0)
+                                    {
+                                        int c = 0;
+                                        <option value="@item.MaterialNameID">
+                                            @foreach (var item1 in m1)
+                                            {
+                                                if (item1.MaterialNameID == item.MaterialNameID)
+                                                {
+                                                    c++;
+                                                }
+                                            }
+                                            @item.Name (@c)
+                                        </option>
+                                    }
+                                }
+                            </select>
                         </div>
                         <div class="form-group">
                             <label class="control-label">Unit</label>
